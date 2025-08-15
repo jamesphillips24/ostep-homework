@@ -268,19 +268,19 @@ I/O done x 1 = 1
 
 3. python3 ./process-run.py -l 1:0,4:100 (implied wait of 5)
 
-1.    I/O   ready   cpu:1
+1.    I/O       ready     cpu:1    I/O: 0
 2.    Blocked   running   cpu:1    I/O: 1
 3.    Blocked   running   cpu:1    I/O: 1
 4.    Blocked   running   cpu:1    I/O: 1
 5.    Blocked   running   cpu:1    I/O: 1
 6.    Blocked   DONE      cpu:0    I/O: 1
-7.    I/O_done  DONE      cpu:1
+7.    I/O_done  DONE      cpu:1    I/O: 0
 
 Time: 7
 
 4. python3 ./process-run.py -l 1:0,4:100 -S SWITCH_ON_END (will wait until I/O is complete to switch process) (implied wait of 5)
 
-1.    I/O   ready   cpu:1 I/O: 0
+1.    I/O       ready      cpu:1    I/O: 0
 2.    Blocked   ready      cpu:0    I/O: 1
 3.    Blocked   ready      cpu:0    I/O: 1
 4.    Blocked   ready      cpu:0    I/O: 1
