@@ -6,6 +6,12 @@
 
 int main(int argc, char *argv[])
 {
+    int pipe_arr[2];
+    pipe(pipe_arr);
+
+    int one = 1;
+    printf("%c", ('0' + 1));
+
     int fork_num = fork();
 
     if(fork_num < 0){
@@ -18,6 +24,5 @@ int main(int argc, char *argv[])
     else{
         return 0;
     }
-
     return 0;
 }
