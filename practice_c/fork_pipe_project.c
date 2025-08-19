@@ -11,7 +11,7 @@ typedef struct Stack{
 } Stack;
 
 void print_stack(Stack* s){
-    while(s->below != NULL){
+    while(s != NULL){
         printf("%c -- %d\n", s->c, s->n);
         s = s->below;
     }
@@ -26,9 +26,7 @@ void pop(Stack** s){
 
 char* int_to_string(int num){
     // Declare head
-    Stack* s = malloc(sizeof(Stack));
-    s->below = NULL;
-    s->n = 0;
+    Stack* s = NULL;
 
     // Create stack node for each number in integer
     // with corresponsing order number.
@@ -38,7 +36,7 @@ char* int_to_string(int num){
         Stack* t = malloc(sizeof(Stack));
         t->below = s;
         t->c = c;
-        t->n = s->n + 1;
+        t->n = s ? s->n + 1 : 1;
         s = t;
 
         num /= 10;
@@ -50,7 +48,7 @@ char* int_to_string(int num){
     buffer[length] = '\0';
 
     // Pop from stack in to buffer to reverse number
-    while(s->n > 0){
+    while(s){
         char c = s->c;
         buffer[length - s->n] = c;
         pop(&s);
