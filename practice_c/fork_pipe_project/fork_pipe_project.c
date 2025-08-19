@@ -27,8 +27,7 @@ int main(int argc, char *argv[])
 
         char* exec_arr[3];
         exec_arr[0] = "./foo2";
-        exec_arr[1] = malloc(sizeof(char) * 10);
-        strcpy(exec_arr[1], int_to_string(pipe_arr[1]));
+        exec_arr[1] = int_to_string(pipe_arr[1]);
         exec_arr[2] = NULL;
 
         execvp(exec_arr[0], exec_arr);
