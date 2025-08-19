@@ -3,70 +3,16 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include "its_header.h"
 
-typedef struct Stack{
-    struct Stack* below;
-    char c;
-    int n;
-} Stack;
-
-void print_stack(Stack* s){
-    while(s != NULL){
-        printf("%c -- %d\n", s->c, s->n);
-        s = s->below;
-    }
-    return;
-}
-
-void pop(Stack** s){
-    Stack* t = *s;
-    *s = (*s)->below;
-    free(t);
-}
-
-char* int_to_string(int num){
-    // Declare head
-    Stack* s = NULL;
-
-    // Create stack node for each number in integer
-    // with corresponsing order number.
-    while(num > 0){
-        char c = '0' + num%10;
-
-        Stack* t = malloc(sizeof(Stack));
-        t->below = s;
-        t->c = c;
-        t->n = s ? s->n + 1 : 1;
-        s = t;
-
-        num /= 10;
-    }
-
-    // Create string buffer based on number length
-    int length = s->n;
-    char* buffer = malloc(length + 1);
-    buffer[length] = '\0';
-
-    // Pop from stack in to buffer to reverse number
-    while(s){
-        char c = s->c;
-        buffer[length - s->n] = c;
-        pop(&s);
-    }
-
-    // Free head
-    free(s);
-
-    return buffer;
-}
+const int EXEC_ARR_LEN = 2;
 
 int main(int argc, char *argv[])
 {
-    char* buffer = int_to_string(756);
-    printf("%s\n", buffer);
-
+    // Initialize pipe
     int pipe_arr[2];
     pipe(pipe_arr);
+
     int fork_num = fork();
 
     if(fork_num < 0){
@@ -74,9 +20,32 @@ int main(int argc, char *argv[])
         exit(1);
     }
     else if (fork_num == 0){
+        printf("Child fork\n");
+
+        // Close unused pipe end
+        close(pipe_arr[0]);
+
+        char* exec_arr[3];
+        exec_arr[0] = "./foo2";
+        exec_arr[1] = malloc(sizeof(char) * 10);
+        strcpy(exec_arr[1], int_to_string(pipe_arr[1]));
+        exec_arr[2] = NULL;
+
+        execvp(exec_arr[0], exec_arr);
         return 0;
     }
     else{
+        wait(NULL);
+        printf("Parent fork\n");
+
+        close(pipe_arr[1]);
+
+        char pipe_output[50];
+        int nbytes = read(pipe_arr[0], pipe_output, sizeof(pipe_output));
+
+        printf("%s\n", pipe_output);
+        close(pipe_arr[0]);
+
         return 0;
     }
     return 0;
