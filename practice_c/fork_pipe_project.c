@@ -24,12 +24,14 @@ void pop(Stack** s){
     free(t);
 }
 
-char* int_to_char(int num){
+char* int_to_string(int num){
+    // Declare head
     Stack* s = malloc(sizeof(Stack));
     s->below = NULL;
     s->n = 0;
 
-    int magnitude = 0;
+    // Create stack node for each number in integer
+    // with corresponsing order number.
     while(num > 0){
         char c = '0' + num%10;
 
@@ -40,19 +42,21 @@ char* int_to_char(int num){
         s = t;
 
         num /= 10;
-        magnitude++;
     }
 
+    // Create string buffer based on number length
     int length = s->n;
     char* buffer = malloc(length + 1);
     buffer[length] = '\0';
 
+    // Pop from stack in to buffer to reverse number
     while(s->n > 0){
         char c = s->c;
         buffer[length - s->n] = c;
         pop(&s);
     }
 
+    // Free head
     free(s);
 
     return buffer;
@@ -60,9 +64,8 @@ char* int_to_char(int num){
 
 int main(int argc, char *argv[])
 {
-    char* buffer = int_to_char(756);
+    char* buffer = int_to_string(756);
     printf("%s\n", buffer);
-
 
     int pipe_arr[2];
     pipe(pipe_arr);
